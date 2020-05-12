@@ -12,6 +12,7 @@ services:
       - DB_PASSWORD=12345678
       - ZIPKIN_URL=http://zipkin:9411
       - LOGSTASH_URL=logstash:4560
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
     ports:
       - "8763:8763"
     depends_on:
