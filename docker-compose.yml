@@ -1,0 +1,90 @@
+version: "3.2"
+services:
+  order-service:
+    # 镜像地址
+    image: 127.0.0.1:5000/order-service:1.0.0
+    # 容器名称
+    container_name: order-service
+    environment:
+      - EUREKA_URL=http://eureka:8761
+      - DB_URL=jdbc:mysql://db:3306/wms-db?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      - DB_USER=root
+      - DB_PASSWORD=12345678
+      - ZIPKIN_URL=http://zipkin:9411
+      - LOGSTASH_URL=logstash:4560
+    ports:
+      - "8763:8763"
+    depends_on:
+      - wms-service
+      - kibana
+
+  wms-service:
+    # 镜像地址
+    image: 127.0.0.1:5000/wms-service:1.0.0
+    # 容器名称
+    container_name: wms-service
+    ports:
+      - "8762:8762"
+    depends_on:
+      - eureka
+      - logstash
+      - zipkin
+      - db
+  eureka:
+    # 镜像地址
+    image: 127.0.0.1:5000/eureka-server:1.0.0
+    # 容器名称
+    container_name: eureka
+    ports:
+      - "8761:8761"
+
+  elasticsearch:
+    image: elasticsearch:6.8.8
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+  kibana:
+    image: kibana:6.8.8
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+  logstash:
+    image: logstash:6.8.8
+    container_name: logstash
+    ports:
+      - "4560:4560"
+    command: logstash -e 'input { tcp { host => "0.0.0.0" port => "4560" mode => "server" codec => json_lines } } output { stdout{ codec => rubydebug } elasticsearch{ hosts => ["elasticsearch:9200"] index => "log4j-%{+YYYY.MM.dd}" document_type => "log4j_type" } }'
+    depends_on:
+      - elasticsearch
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+      - ES_HOSTS=http://elasticsearch:9200
+      - STORAGE_TYPE=elasticsearch
+    depends_on:
+      - elasticsearch
+  db:
+    image: mysql:5.7
+    restart: always
+    container_name: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_DATABASE=wms-db
+    ports:
+      - "3306:3306"
+volumes:
+  db-data:

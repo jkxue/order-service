@@ -1,0 +1,6 @@
+info:
+  name: 订单服务
+  contact: xuejinku
+
+server:
+  port: 8763
