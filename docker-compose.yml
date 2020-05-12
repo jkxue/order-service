@@ -23,6 +23,13 @@ services:
     image: 127.0.0.1:5000/wms-service:1.0.0
     # 容器名称
     container_name: wms-service
+    environment:
+      - EUREKA_URL=http://eureka:8761
+      - DB_URL=jdbc:mysql://db:3306/wms-db?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      - DB_USER=root
+      - DB_PASSWORD=12345678
+      - ZIPKIN_URL=http://zipkin:9411
+      - LOGSTASH_URL=logstash:4560
     ports:
       - "8762:8762"
     depends_on:
