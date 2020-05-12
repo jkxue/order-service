@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.tw.training.order.db.OrderRepository;
+import com.tw.training.order.repository.OrderRepository;
 
 // 订单服务
 @RestController

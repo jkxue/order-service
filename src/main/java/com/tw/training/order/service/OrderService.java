@@ -8,7 +8,7 @@ import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.tw.training.order.client.WmsServiceClient;
-import com.tw.training.order.db.OrderRepository;
+import com.tw.training.order.repository.OrderRepository;
 
 @Service
 @Transactional(rollbackFor=Throwable.class)
