@@ -4,3 +4,45 @@ info:
 
 server:
   port: 8763
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    # 服务列表缓存更新时间
+    registryFetchIntervalSeconds: 10
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+  #      defaultZone: ${EUREKA_URL}/eureka/
+
+  instance:
+    # 心跳间隔
+    leaseRenewalIntervalInSeconds: 10
+    preferIpAddress: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+spring:
+  application:
+    name: order-service
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wms-db?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 12345678
+  #    url: ${DB_URL}
+  #    username: ${DB_USER}
+  #    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      # 自动创建表
+      ddl-auto: update
+    show-sql: true
+  sleuth:
+    sampler:
+      # 采样比例
+      percentage: 1.0
+    # 接口调用信息推送到这个zipkin服务
+  zipkin:
+    baseUrl: http://127.0.0.1:9411/
+#   base-url: ${ZIPKIN_URL}

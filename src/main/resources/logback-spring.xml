@@ -14,7 +14,7 @@
 			<charset>utf8</charset>
 		</encoder>
 	</appender>
-	​<springProperty scope="context" name="logstashHost" source="LOGSTASH_URL" />
+<!--	<springProperty scope="context" name="logstashHost" source="LOGSTASH_URL" />-->
 	<appender name="logstash_appender"
 			  class="net.logstash.logback.appender.LogstashTcpSocketAppender">
 
@@ -22,8 +22,8 @@
 			<!-- Minimum logging level to be presented in the console logs -->
 			<level>INFO</level>
 		</filter>
-<!--		<destination>127.0.0.1:4560</destination>-->
-		<destination>${logstashHost}</destination>
+		<destination>127.0.0.1:4560</destination>
+<!--		<destination>${logstashHost}</destination>-->
 		<encoder class="net.logstash.logback.encoder.LogstashEncoder" />
 	</appender>
 

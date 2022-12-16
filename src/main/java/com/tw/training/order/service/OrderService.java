@@ -27,8 +27,9 @@ public class OrderService {
 	public void save(OrderDomain order) throws Exception {
 		orderRepository.save(order);
 		// 减库存
-		String subStockResult = wmsServiceClient.subStock(order.getGoodsId());
+		String subStockResult = wmsServiceClient.subStock(order.getGoodsId(),1);
 		if (subStockResult == null) {
+			logger.error("下单失败[请联系客服]");
 			throw new Exception("下单失败[请联系客服]");
 		}
 	}

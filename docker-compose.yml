@@ -1,10 +1,11 @@
 version: "3.2"
 services:
   order-service:
-    # 镜像地址
-    image: 127.0.0.1:5000/order-service:1.0.0
     # 容器名称
     container_name: order-service
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     environment:
       - EUREKA_URL=http://eureka:8761
       - DB_URL=jdbc:mysql://db:3306/wms-db?useUnicode=true&characterEncoding=utf-8&useSSL=false
@@ -18,10 +19,9 @@ services:
     depends_on:
       - wms-service
       - kibana
-
   wms-service:
     # 镜像地址
-    image: 127.0.0.1:5000/wms-service:1.0.0
+    image: wms-service:1.0.0
     # 容器名称
     container_name: wms-service
     environment:
@@ -40,31 +40,37 @@ services:
       - db
   eureka:
     # 镜像地址
-    image: 127.0.0.1:5000/eureka-server:1.0.0
+    image: eureka-server:1.0.0
     # 容器名称
     container_name: eureka
     ports:
       - "8761:8761"
 
   elasticsearch:
-    image: elasticsearch:6.8.8
+    platform: linux/x86_64
+    image: elasticsearch:7.16.2
     container_name: elasticsearch
     ports:
       - "9200:9200"
       - "9300:9300"
     environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ELASTICSEARCH_NETWORK_HOST=0.0.0.0
   kibana:
-    image: kibana:6.8.8
+    platform: linux/x86_64
+    image: kibana:7.16.2
     container_name: kibana
     ports:
       - "5601:5601"
     environment:
-      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - elasticsearch.hosts=http://elasticsearch:9200
     depends_on:
       - elasticsearch
   logstash:
-    image: logstash:6.8.8
+    platform: linux/x86_64
+    image: logstash:7.16.2
     container_name: logstash
     ports:
       - "4560:4560"
@@ -72,6 +78,7 @@ services:
     depends_on:
       - elasticsearch
   zipkin:
+    platform: linux/x86_64
     image: openzipkin/zipkin
     container_name: zipkin
     ports:
@@ -83,6 +90,7 @@ services:
     depends_on:
       - elasticsearch
   db:
+    platform: linux/x86_64
     image: mysql:5.7
     restart: always
     container_name: mysql
