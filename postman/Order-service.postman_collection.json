@@ -1,0 +1,42 @@
+{
+	"info": {
+		"_postman_id": "4e1a176f-ed01-4897-9a1f-7528fe6d4784",
+		"name": "Order-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3136115"
+	},
+	"item": [
+		{
+			"name": "new-order",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "phone",
+						"value": "123456",
+						"type": "text"
+					},
+					{
+						"key": "email",
+						"value": "jk@163.com",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8763/order/new/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8763",
+					"path": [
+						"order",
+						"new",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
