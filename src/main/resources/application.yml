@@ -38,11 +38,9 @@ spring:
       # 自动创建表
       ddl-auto: update
     show-sql: true
-  sleuth:
-    sampler:
-      # 采样比例
-      percentage: 1.0
-    # 接口调用信息推送到这个zipkin服务
-  zipkin:
-    baseUrl: http://127.0.0.1:9411/
-#   base-url: ${ZIPKIN_URL}
+
+opentracing:
+  jaeger:
+    http-sender:
+      url: http://localhost:14268/api/traces
+

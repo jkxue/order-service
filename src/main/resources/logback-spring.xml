@@ -30,7 +30,7 @@
 	<logger name="com.tw" level="debug" />
 	<logger name="com.netflix.eureka" level="warn" />
 	<logger name="org.springcloud" level="warn" />
-	<root level="debug">
+	<root level="info">
 		<appender-ref ref="console" />
 		<appender-ref ref="logstash_appender" />
 	</root>

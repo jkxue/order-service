@@ -77,18 +77,13 @@ services:
     command: logstash -e 'input { tcp { host => "0.0.0.0" port => "4560" mode => "server" codec => json_lines } } output { stdout{ codec => rubydebug } elasticsearch{ hosts => ["elasticsearch:9200"] index => "log4j-%{+YYYY.MM.dd}" document_type => "log4j_type" } }'
     depends_on:
       - elasticsearch
-  zipkin:
-    platform: linux/x86_64
-    image: openzipkin/zipkin
-    container_name: zipkin
+  jaeger:
+    image: jaegertracing/all-in-one:1.40
     ports:
-      - "9411:9411"
-    environment:
-      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
-      - ES_HOSTS=http://elasticsearch:9200
-      - STORAGE_TYPE=elasticsearch
-    depends_on:
-      - elasticsearch
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 16686:16686
+      - 14268:14268
   db:
     platform: linux/x86_64
     image: mysql:5.7
