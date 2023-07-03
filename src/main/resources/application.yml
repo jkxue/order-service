@@ -43,6 +43,25 @@ spring:
       # 采样比例
       percentage: 1.0
     # 接口调用信息推送到这个zipkin服务
-  zipkin:
-    baseUrl: http://127.0.0.1:9411/
+#  zipkin:
+#    baseUrl: http://127.0.0.1:9411/
 #   base-url: ${ZIPKIN_URL}
+
+management:
+  metrics:
+    enable:
+      all: true # all mean all inner metrics
+    export:
+      prometheus:
+        enabled: true
+    tags: # user define labels only for inner metrics
+      application: ${spring.application.name}
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: ["prometheus","health"]

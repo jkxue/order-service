@@ -3,6 +3,7 @@ package com.tw.training.order.controller;
 import java.util.Date;
 import java.util.UUID;
 
+import com.tw.training.order.monitor.PrometheusCustomMonitor;
 import com.tw.training.order.service.OrderService;
 import com.tw.training.order.domain.OrderDomain;
 import org.slf4j.Logger;
@@ -30,9 +31,14 @@ public class OrderController {
 	@Autowired
 	OrderRepository orderRepository;
 
+	@Autowired
+	private PrometheusCustomMonitor monitor;
+
 	@RequestMapping("/new/{goodsId}")
 	public String add(@PathVariable("goodsId") long goodsId, @RequestHeader(name = "phone") String phone,
 			@RequestHeader(name = "email") String email) throws Exception {
+		// 统计下单次数
+		monitor.getOrderCount().increment();
 		// 新增订单
 		OrderDomain order = new OrderDomain();
 		order.setOrderId(UUID.randomUUID().toString());

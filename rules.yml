@@ -1,0 +1,18 @@
+groups:
+  - name: svc-alert-rule
+    rules:
+      - alert: svc-down # 服务是否下线
+        expr: sum(up{job="order-service"}) == 0
+        for: 1m
+        labels: # 自定义标签
+          severity: critical
+        annotations:
+          summary: "订单服务已下线，请检查！！"
+      - alert: order-error-rate-high # 10分钟内下单失败率是否大于10%
+        expr: sum(rate(requests_error_total{application="order-service"}[10m])) / sum(rate(order_request_count_total{application="order-service"}[10m])) > 0.1
+        for: 1m
+        labels:
+          severity: major
+        annotations:
+          summary: "订单服务响应异常！！"
+          description: "10分钟订单错误率已经超过10% (当前值: {{ $value }} ！！！"
